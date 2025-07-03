@@ -12,11 +12,11 @@ CORS(app)
 
 # Load models
 chonk_model = tf.keras.models.load_model(
-    'C:/Users/Student/Desktop/IzzyL/Projects/ChonkCats/chonk-chart-model.h5'
+    'chonk-chart-model.h5'
 )
 
 inst_model = tf.keras.models.load_model(
-    "C:/Users/Student/Desktop/IzzyL/Projects/MusicImages/inst-classification-clean",
+    "inst-classification-clean.keras",
     custom_objects={"KerasLayer": hub.KerasLayer}
 )
 
