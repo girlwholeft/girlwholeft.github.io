@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<div class="hero-image">
+  <div class="hero-text">
+    <h1>Izzy's Machine Learning Models</h1>
+    <p>Izzy's models for determining a cat's place on the chonk chart and identifying instruments from images.</p>
+  </div>
+</div>
+
+<body>
+
+  <!-- Instrument Classification -->
+  <div class="card">
+    <div class="container">
+      <h4><b>Instrument Classification Model</b></h4>
+      <h5>Upload an image of an acoustic guitar, electric guitar, drumset, or keyboard on a white background.</h5>
+      <input type="file" id="imageInput">
+      <button onclick="sendImage()">Predict</button>
+      <p id="instrument-result"></p>
+    </div>
+  </div>
+
+  <!-- Cat Chonk Prediction -->
+  <div class="card">
+    <div class="container">
+      <h4><b>Cat Chonk Level Model</b></h4>
+      <h5>Type an integer from 2 to 9 (represents weight of cat in kg)</h5>
+      <input type="text" id="weight" name="weight">
+      <h5>Select the breed of the cat</h5>
+      <select name="breeds" id="brds">
+        <option value="Abyssinian">Abyssinian</option>
+        <option value="American Shorthair">American Shorthair</option>
+        <option value="Balinese">Balinese</option>
+        <option value="Bengal">Bengal</option>
+        <option value="Birman">Birman</option>
+        <option value="British Shorthair">British Shorthair</option>
+        <option value="Burmese">Burmese</option>
+        <option value="Chartreux">Chartreux</option>
+        <option value="Cornish Rex">Cornish Rex</option>
+        <option value="Devon Rex">Devon Rex</option>
+        <option value="Egyptian Mau">Egyptian Mau</option>
+        <option value="Exotic Shorthair">Exotic Shorthair</option>
+        <option value="Himalayan">Himalayan</option>
+        <option value="Maine Coon">Maine Coon</option>
+        <option value="Manx">Manx</option>
+        <option value="Munchkin">Munchkin</option>
+        <option value="Norwegian Forest">Norwegian Forest</option>
+        <option value="Ocicat">Ocicat</option>
+        <option value="Oriental">Oriental</option>
+        <option value="Persian">Persian</option>
+        <option value="Ragdoll">Ragdoll</option>
+        <option value="Russian Blue">Russian Blue</option>
+        <option value="Savannah">Savannah</option>
+        <option value="Scottish Fold">Scottish Fold</option>
+        <option value="Siamese">Siamese</option>
+        <option value="Siberian">Siberian</option>
+        <option value="Singapura">Singapura</option>
+        <option value="Sphynx">Sphynx</option>
+        <option value="Tonkinese">Tonkinese</option>
+        <option value="Turkish Angora">Turkish Angora</option>
+      </select>
+      <h5>Select the sex of the cat</h5>
+      <select name="sex" id="sex">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+      <br>
+      <button onclick="makePrediction()">Predict</button>
+      <p id="chonk-result"></p>
+    </div>
+  </div>
+
+  <script>
+    async function makePrediction() {
+      const weight = parseFloat(document.getElementById("weight").value);
+      const breed = document.getElementById("brds").value;
+      const sex = document.getElementById("sex").value;
+
+      if (!weight || isNaN(weight)) {
+        alert("Please enter a valid weight.");
+        return;
+      }
+
+      const response = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ weight, breed, sex })
+      });
+
+      const result = await response.json();
+      console.log("Chonk prediction result:", result);
+      document.getElementById("chonk-result").innerText = `Prediction: ${result.prediction}`;
+    }
+
+    async function sendImage() {
+      const fileInput = document.getElementById('imageInput');
+      const file = fileInput.files[0];
+      if (!file) {
+        alert("Please upload an image first.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("http://127.0.0.1:5000/predict2", {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await response.json();
+      console.log("Instrument prediction result:", result);
+      document.getElementById("instrument-result").innerText =
+        `Prediction: ${result.prediction} (Confidence: ${result.confidence.toFixed(2)})`;
+    }
+  </script>
+  
+  <h5>At the start of this class, I got a refresher on the basics of Python to solidify my skills. I learned about the different ways to use, store, and manipulate data in Python. In the days following, I learned about algorithms, which use a sequence of steps to complete a task. I started on te machine learning units a few days later, which taught me how computers can learn to recognize patterns. The projects I did used densely-connected neural networks and convolutional neural networks.</h5>
+  
+  <img src="python-image.jpg" style="width:200px;height:200px">
+  
+  <h5>My first project was relatively straightforward. It uses a densely-connected neural network that was trained to determine a cat's place on the chonk chart based on its breed, weight, and sex. For example it would see a 5 kilogram male Turkish Angora and classify it as "He chomnk". It can do this because densely-connected neural networks can learn, similar to how humans learn. It can recognize certain patterns when it's shown certain data over and over again.</h5>
+  
+  <img src="chonk-cats-code.png" style="width:200px;height=146px">
+  
+  <h5>My next project was a bit more difficult. My idea was to train a computer to identify the name of an instrument by an image of it. This would use a convolutional neural network, which breaks images down into smaller patterns that it can recognize. My first attempt involved a large dataset with a lot going on in the images. These kinds of datasets can confuse a computer and make it unable to identify patterns. When I tried to train my model on these images, it could not make accurate predictions. My solution to this problem was to find a new dataset with fewer confusing elements. All the images were on a white background, and it was just the instrument and nothing else. But even this did not give more accurate results. I tried a lot of solutions to fix this. I tried varying the data, making it more similar, and different model builds. My class figured out that the problem was a limitation of the computers. In order to train an accurate model from scratch, we would need more sophisticated hardware. Our solution was to use a pre-trained model and fine-tune it for our data. This led to much more success with training.</h5>
+  
+  <img src="download18.jpg">
+  
+  <h5>The final step was to make a webpage to showcase my projects. I understood the basics from the lesson plan, but I almost exclusively used ChatGPT for this part. However, I did have to work with ChatGPT and experiment a bit when errors came about. The webpage uses a server made using Flask and Python to load the models, and has input fields for entering the data you want it to predict. The page itself uses HTML for the basic elements of the webpage, CSS for the styling and aesthetic appeal, and JavaScript for the functionality.</h5>
+  
+  <img src="website-image.png" style="width:200px;height:135px">
+  
+  <h5>This class brought hardships, but I learned so much and had a lot of fun. I got to experiment with the technologies that will shape the future and saw firsthand what they can do. I had to use problem-solving skills to fix errors and improve performance. All in all, this class was educational and rewarding, and it taught me so much about how computers can learn like humans can.</h5>
+  
+  <img src="chonk-chart-image.png" style="width:300px;height:102px">
+  
+</body>
+</html>
